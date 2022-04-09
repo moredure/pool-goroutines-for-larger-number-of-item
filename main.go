@@ -8,12 +8,8 @@ import (
 	"time"
 )
 
-var acheap *SyncMutexItemsHeap
-
-func init() {
-	acheap = &SyncMutexItemsHeap{
-		Cond: sync.NewCond(new(sync.Mutex)),
-	}
+var acheap = &SyncMutexItemsHeap{
+	Cond: sync.NewCond(new(sync.Mutex)),
 }
 
 var accounts = &Accounts{
