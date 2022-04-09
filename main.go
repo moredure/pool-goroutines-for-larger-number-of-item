@@ -36,25 +36,27 @@ func main() {
 				if pause := account.nextAccessTime.Sub(time.Now()); pause > 0 {
 					time.Sleep(pause)
 				}
-				select {
-				case <-account.stopped:
+				if account.stopped.Load() != nil {
 					continue
+				}
+				var (
+					next State
+					err  error
+				)
+				switch account.state {
+				case Connect:
+					// in case of error retry
+					// in case of result return next State
+					next, err = account.Connect()
+				case Work:
+					next, err = account.Work()
 				default:
-					var err error
-					var newState State
-					switch account.state {
-					case Connect:
-						// in case of error retry
-						// in case of result return next State
-						newState, err = account.Connect()
-					case Work:
-						newState, err = account.Work()
-					default:
-						log.Fatal("undefined State")
-					}
-					if err == nil {
-						account.state = newState
-					}
+					log.Fatal("undefined State")
+				}
+				if err != nil {
+					account.state = account.state
+				} else {
+					account.state = next
 				}
 				account.nextAccessTime = time.Now().Add(2 * time.Second) // this time can be dynamicaly delayed
 				acheap.Push(account)

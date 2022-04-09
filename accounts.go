@@ -15,7 +15,6 @@ func (acs *Accounts) AddAccount(id string) {
 	a := &Account{
 		id:          id,
 		dataArrived: false, // for epoll should be atomic
-		stopped:     make(chan struct{}),
 	}
 	acs.accounts[id] = a
 	acheap.Push(a)

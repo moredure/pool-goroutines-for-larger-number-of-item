@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"sync/atomic"
 	"time"
 )
 
@@ -10,7 +11,7 @@ type Account struct {
 	//conn net.Conn
 	id             string
 	dataArrived    bool
-	stopped        chan struct{}
+	stopped        atomic.Value
 	state          State
 	nextAccessTime time.Time
 }
@@ -23,7 +24,7 @@ const (
 )
 
 func (a *Account) Stop() {
-	close(a.stopped)
+	a.stopped.Store(struct{}{})
 }
 
 func (a *Account) Connect() (State, error) {
@@ -33,7 +34,7 @@ func (a *Account) Connect() (State, error) {
 	//}
 	//epoll.Add(conn, func(conn) {
 	//	a.dataArrived = true
-	//})
+	//}) ONESHOT
 	fmt.Println("Connect", a.id)
 	return Work, nil
 }
@@ -41,6 +42,11 @@ func (a *Account) Connect() (State, error) {
 func (a *Account) Work() (State, error) {
 	//if a.dataArrived {
 	//	// process arived data change state etc
+	//  a.dataArrived = false
+	// read all data
+	// //epoll.Add(conn, func(conn) {
+	//	//	a.dataArrived = true
+	//	//}) ONESHOT
 	//}
 	fmt.Println("Work", a.id)
 	return Work, nil
