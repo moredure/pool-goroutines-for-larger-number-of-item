@@ -15,7 +15,7 @@ func (acs *Accounts) AddAccount(id string) {
 	defer acs.Unlock()
 	a := &Account{
 		id:             id,
-		dataArrived:    false,
+		dataArrived:    false, // epoll
 		stopped:        make(chan struct{}),
 		nextAccessTime: time.Time{},
 	}
