@@ -3,25 +3,23 @@ package main
 import (
 	"container/heap"
 	"sync"
-	"time"
 )
 
 type SyncMutexItemsHeap struct {
-	sync.Mutex
-	sync.Cond
+	*sync.Cond
 	Items Items
 }
 
 func (s *SyncMutexItemsHeap) Push(i *Account) {
-	s.Lock()
-	defer s.Unlock()
+	s.L.Lock()
+	defer s.L.Unlock()
 	heap.Push(&s.Items, i)
 	s.Signal()
 }
 
 func (s *SyncMutexItemsHeap) Pop() *Account {
-	s.Lock()
-	defer s.Unlock()
+	s.L.Lock()
+	defer s.L.Unlock()
 
 	for len(s.Items) == 0 {
 		s.Wait()
