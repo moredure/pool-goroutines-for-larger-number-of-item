@@ -32,9 +32,10 @@ func main() {
 		go func() {
 			defer wg.Done()
 			for {
-				account := acheap.Pop()
+				account := acheap.Pop() // channel based pop can be used
 				if pause := account.nextAccessTime.Sub(time.Now()); pause > 0 {
-					time.Sleep(pause)
+					time.Sleep(pause) // then it will be possible to wait on timer here and probably 
+					// requeue sleeping item while starting newly appeared non sleeping item
 				}
 				if account.stopped.Load() != nil {
 					continue
