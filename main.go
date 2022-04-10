@@ -20,12 +20,11 @@ var N = 2
 
 func main() {
 	go func() {
+		// add new account on some event
 		accounts.AddAccount(strconv.Itoa(rand.Int()))
 	}()
 	var wg sync.WaitGroup
 
-	// listen for nats on new accounts
-	// listen for nats on remove account
 	for i := 0; i < N; i += 1 { // N is number of workers
 		wg.Add(1)
 		// can be dynamicaly resized if size of acheap grows?
