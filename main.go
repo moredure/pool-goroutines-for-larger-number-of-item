@@ -58,9 +58,11 @@ func main() {
 				} else {
 					account.state = next
 				}
+				
 				// optional
 				account.nextAccessTime = time.Now().Add(2 * time.Second) // this time can be dynamicaly delayed
 				acheap.Push(account)
+				// also time.AfterFunc() can be done in order to prevent time.Sleep at the top blocking entire goroutine
 				// otherwise accounts can be pushed to acheap from epoll notified events to prevent unneeded processing of state
 			}
 		}()
