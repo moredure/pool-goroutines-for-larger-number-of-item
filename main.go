@@ -62,6 +62,8 @@ func main() {
 				// optional
 				account.nextAccessTime = time.Now().Add(2 * time.Second) // this time can be dynamicaly delayed
 				acheap.Push(account)
+				// also timer can be created using timerfd_create syscall and enqueue to epoll as network connection which allows to
+				// delegate timer to some outside function without requiring goroutines
 				// also time.AfterFunc() can be done in order to prevent time.Sleep at the top blocking entire goroutine
 				// other delayed enqueing can be used: some service with goroutine which checking all delayed tasks when they become ready
 				// otherwise accounts can be pushed to acheap from epoll notified events to prevent unneeded processing of state
