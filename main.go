@@ -32,6 +32,15 @@ func main() {
 		go func() {
 			defer wg.Done()
 			for {
+				// item := acheap.Pop()
+				// calculate pause and reset ticker
+				// select {
+				// case <-item.C: // item wait period
+				// 	// start processing
+				// case newItem := <-acheap.Now(): // someone earlier enqueued work stealing??)
+				// 	acheap.Push(item)
+				// 	item = newItem
+				// }
 				account := acheap.Pop() // channel based pop can be used
 				if pause := account.nextAccessTime.Sub(time.Now()); pause > 0 {
 					time.Sleep(pause) // then it will be possible to wait on timer here and probably 
